@@ -13,7 +13,7 @@
     "jsdom": "0.6.5",
     "uglify-js": "1.2.2",
     "commander": "0.5.1",
-    "js-min": "*"
+    "jsmin": "*"
   },
   "repository": {
     "type": "git",
