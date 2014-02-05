@@ -269,7 +269,7 @@ function Inliner(url, options, callback) {
         todo.scripts && assets.scripts.each(function () {
 
           //if src exists
-          if (this.src)
+          if (this.src) {
             var $script = window.$(this),
                 scriptURL = URL.resolve(url, this.src);
 
