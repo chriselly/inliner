@@ -267,22 +267,31 @@ function Inliner(url, options, callback) {
         // basically this is the jQuery instance we tacked on to the request,
         // but we're just being extra sure before we do zap it out  
         todo.scripts && assets.scripts.each(function () {
-          var $script = window.$(this),
-              scriptURL = URL.resolve(url, this.src);
 
-          if (!this.src || scriptURL.indexOf('google-analytics.com') !== -1) { // ignore google
-            breakdown.scripts--;
-            inliner.todo--;
-            scriptsFinished();
-          } else if (this.src) {
-            inliner.get(scriptURL, { not: 'text/html' }, function (data) {
-              // catches an exception that was being thrown, but script escaping wasn't being caught
-              if (data) $script.text(data.replace(/<\/script>/gi, '<\\/script>')); //.replace(/\/\/.*$\n/g, ''));
-              // $script.before('<!-- ' + scriptURL + ' -->');
+          //if src exists
+          if (this.src)
+            var $script = window.$(this),
+                scriptURL = URL.resolve(url, this.src);
+
+            if (!this.src || scriptURL.indexOf('google-analytics.com') !== -1) { // ignore google
               breakdown.scripts--;
               inliner.todo--;
               scriptsFinished();
-            });      
+            } else if (this.src) {
+              inliner.get(scriptURL, { not: 'text/html' }, function (data) {
+                // catches an exception that was being thrown, but script escaping wasn't being caught
+                if (data) $script.text(data.replace(/<\/script>/gi, '<\\/script>')); //.replace(/\/\/.*$\n/g, ''));
+                // $script.before('<!-- ' + scriptURL + ' -->');
+                breakdown.scripts--;
+                inliner.todo--;
+                scriptsFinished();
+              });      
+            }
+          } else {
+            //skip missing script
+            breakdown.scripts--;
+            inliner.todo--;
+            scriptsFinished();
           }
         });
 
